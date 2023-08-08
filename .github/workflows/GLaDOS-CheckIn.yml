@@ -1,0 +1,52 @@
+name: GLaDOS签到
+
+on:
+  schedule:
+    - cron: "0 0,16 * * *"
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v3
+
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Shanghai
+
+      - name: 准备Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: 安装Python依赖
+        run: |
+          if [ -f ./GLaDOS/requirements.txt ]; then pip install -r ./GLaDOS/requirements.txt; fi
+      - name: Run checkin
+        env:
+          cookie: ${{ secrets.GLADOS_COOKIE }}
+          is_ServerChan_push: 0   # 0-不推送消息，1-开启Server酱消息推送
+          SendKey: ${{ secrets.SENDKEY }}
+          is_PushPlus_push: 1   # 0-不推送消息，1-开启pushplus消息推送
+          token: ${{ secrets.TOKEN }}
+          is_Qmsg_push: 1   # 0-不推送消息，1-开启Qmsg消息推送
+          key: ${{ secrets.KEY }}
+        run: |
+          output=$(python ./GLaDOS/main.py 2>&1)
+          if [[ $output != *"Checkin! Get 1 Day"* && $output != *"Please Try Tomorrow"* ]]; then
+            echo "签到失败" > new_run.log
+          fi
+          echo "$output" >> new_run.log
+          cat run.log >> new_run.log
+          mv new_run.log run.log
+      - name: Push log
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: GLaDOS签到
+          branch: main

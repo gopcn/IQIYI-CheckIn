@@ -1,0 +1,46 @@
+name: 天翼云盘签到抽奖
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 22,12 * * *"
+  watch:
+    types: [started]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: Asia/Shanghai
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r ./requirements.txt
+
+      - name: "运行 天翼云盘签到抽奖"
+        env:
+          Cloud_USER: ${{ secrets.Cloud_USER }}
+          Cloud_PWD: ${{ secrets.Cloud_PWD }}
+        run: |
+          python ./function/cloud189/checkin.py | tee >(sed 's/\x1B\[[0-9;]*[JKmsu]//g' >> run.log)
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "gopcn"
+          git config --global user.email "121377609+gopcn@users.noreply.github.com"
+          git add run.log
+          git commit -m "天翼云盘签到抽奖"
+          git push

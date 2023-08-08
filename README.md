@@ -1,54 +1,45 @@
+<div align=center>
 
-<div align="center">
-<h1 align="center">My-Actions</h1>
-<img src="https://img.shields.io/github/issues/MayoBlueSky/My-Actions?color=green">
-<img src="https://img.shields.io/github/stars/MayoBlueSky/My-Actions?color=yellow">
-<img src="https://img.shields.io/github/forks/MayoBlueSky/My-Actions?color=orange">
-<img src="https://img.shields.io/github/license/MayoBlueSky/My-Actions?color=ff69b4">
-<img src="https://img.shields.io/github/languages/code-size/MayoBlueSky/My-Actions?color=blueviolet">
-</div>
+# IQIYI-CheckIn
 
-个人收集并适配Github Actions的各类签到大杂烩
-## 不要fork了 ⭐️star就行 #
+----
+##### Cookie变量设置 Secrets:**
 
-[点这里加TG群](https://t.me/+bCXtiD4YI1ExNjE1) 
+| 名称                                                    | 内容                                                                           | 说明                                                                                                                 |
+|-------------------------------------------------------|------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| `AUTH_PAT` | 使用Github Actions清理workflows日志 | [PAT获取教程](https://docs.github.com/cn/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) |
+| [IQIYI_COOKIE](https://www.iqiyi.com) | 爱奇艺Cookie | F12控制台执行`console.log(document.cookie)`电脑版有效期三个月                                                                 |
+| [GLADOS_COOKIE](https://glados.one/console/education) | [Clash for Windows](https://github.com/Fndroid/clash_for_windows_pkg/releases) | [Clash for Windows 汉化补丁](https://github.com/BoyceLig/Clash_Chinese_Patch/releases) |
 
-需要什么签到可以去提[issues](https://github.com/MayoBlueSky/My-Actions/issues),也欢迎PR
+##### IQIYI-CheckIn推送通知环境变量(目前提供`微信server酱`、`pushplus(推送加)`、`iOS Bark APP`、`telegram机器人`、`钉钉机器人`、`企业微信机器人`、`iGot`等通知方式)
+|       Name        |                                        归属                                        | 属性  | 说明                                                                                                                                                                                             |
+|:-----------------:|:--------------------------------------------------------------------------------:|-----|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|    `SEND_KEY`     |                                       推送开关                                       | 非必须 | 推送开关设置如设置该参数 仅在Cookie失效时推送,不设置则默认全部推送无论是否失败 |
+|    `PUSH_KEY`     |                                   微信server酱推送                                    | 非必须 | server酱的微信通知[更新公告](https://sc.ftqq.com/9.version) |
+|    `BARK_PUSH`    |                                      BARK推送                                       | 非必须 | IOS用户下载BARK这个APP,填写内容是app提供的`设备码`，例如：https://api.day.app/123 ，那么此处的设备码就是`123` |
+|   `BARK_SOUND`    |                                      BARK推送                                       | 非必须 | bark推送声音 |
+|  `TG_BOT_TOKEN`   |                                    telegram推送                                     | 非必须 | tg推送(需设备可连接外网),`TG_BOT_TOKEN`和`TG_USER_ID`两者必需,填写自己申请[@BotFather](https://t.me/BotFather)的Token,如`10xxx4:AAFcqxxxxgER5uw` |
+|   `TG_USER_ID`    |                                    telegram推送                                     | 非必须 | tg推送(需设备可连接外网),`TG_BOT_TOKEN`和`TG_USER_ID`两者必需,填写[@getuseridbot](https://t.me/getuseridbot)中获取到的纯数字ID |
+|  `DD_BOT_TOKEN`   |                                       钉钉推送                                       | 非必须 | 钉钉推送(`DD_BOT_TOKEN`和`DD_BOT_SECRET`两者必需)[官方文档](https://ding-doc.dingtalk.com/doc#/serverapi2/qf2nxq) ,只需`https://oapi.dingtalk.com/robot/send?access_token=XXX` 等于`=`符号后面的XXX即可 |
+|  `DD_BOT_SECRET`  |                                       钉钉推送                                       | 非必须 | (`DD_BOT_TOKEN`和`DD_BOT_SECRET`两者必需) ,密钥，机器人安全设置页面，加签一栏下面显示的SEC开头的`SECXXXXXXXXXX`等字符 , 注:钉钉机器人安全设置只需勾选`加签`即可，其他选项不要勾选 |
+|    `QYWX_KEY`     |                                   企业微信机器人推送                                 | 非必须 | 密钥，企业微信推送 webhook 后面的 key [详见官方说明文档](https://work.weixin.qq.com/api/doc/90000/90136/91770) |
+|     `QYWX_AM`     |                                   企业微信应用推送                                  | 非必须 | 依次填入 企业id,secret,@all(或者成员id),AgentID,图片id |
+|  `IGOT_PUSH_KEY`  |                                      iGot推送                                       | 非必须 | iGot聚合推送，支持多方式推送，确保消息可达 |
+| `PUSH_PLUS_TOKEN` |                                    pushplus推送                                     | 非必须 | 微信扫码登录后一对一推送或一对多推送下面的token(您的Token) [官方网站](https://www.pushplus.plus/) |
+| `PUSH_PLUS_USER`  |                                    pushplus推送                                    | 非必须 | 一对多推送的“群组编码”（一对多推送下面->您的群组(如无则新建)->群组编码）注:(1、需订阅者扫描二维码 2、如果您是创建群组所属人，也需点击“查看二维码”扫描绑定，否则不能接受群组消息推送)，只填`PUSH_PLUS_TOKEN`默认为一对一推送 |
+|  `TG_PROXY_HOST`  |                                  Telegram 代理的 IP                                | 非必须 | 代理类型为 http。例子：http代理 http://127.0.0.1:1080 则填写 127.0.0.1 |
+|  `TG_PROXY_PORT`  |                                  Telegram 代理的端口                                | 非必须 | 例子：http代理 http://127.0.0.1:1080 则填写 1080 |
+|    `GOBOT_URL`    |                                   go-cqhttp URL                                   | 非必须 | 推送到个人 QQ: http://127.0.0.1/send_private_msg 群：http://127.0.0.1/send_group_msg |
+|    `GOBOT_QQ`     |                                   go-cqhttp QQ                                    | 非必须 | 如果 GOBOT_URL 设置 /send_private_msg 则需要填入 user_id=个人 QQ 相反如果是 /send_group_msg 则需要填入 group_id=QQ 群 |
+|   `GOBOT_TOKEN`   |                                  go-cqhttp Token                                  | 非必须 | 填写在 go-cqhttp 文件设置的访问密钥 |
 
-# 使用方式
-1. [新建仓库并同步代码](RepoSync.md)
-2. 点击Settings -> Secrets -> 点击绿色按钮 (如无绿色按钮说明已激活。直接到下一步。)
-3. 新增 new secret 并设置 [Secrets](Secrets.md):
-4. 双击右上角自己仓库Star触发，如有不使用项目请[禁用部分项目](https://cdn.jsdelivr.net/gh/BlueskyClouds/Script/img/2020/10/19/img/2020-10-19.jpg)
-6. **必须** - 请随便找个文件(例如`README.md`)，加个空格提交一下，否则可能会出现无法定时执行的问题
-7. 由于规则更新,同步后会默认禁用,请手动点击Actions 选择要签到的项目 `enable workflows`激活
-8. [定时执行](#定时执行) (如修改了执行时间 请关闭同步源仓库  否则同步时会覆盖)
-
-[设置相关Secrets](Secrets.md)
-
-# 定时执行
-1. 支持手动执行，具体在Actions中选中要执行的Workflows后再在右侧可以看到Run workflow，点击即可运行此workflow。
-
-2. 如果嫌上一步麻烦的，也可以直接点击一下自己的star，你会发现所有的workflow都已执行。
-
-3. 如需修改执行时间自行修改`.github\workflows\`下面的yaml内的` cron:` 执行时间为国际标准时间 [时间转换](http://www.timebie.com/cn/universalbeijing.php) 分钟在前 小时在后 尽量提前几分钟,因为安装部署环境需要一定时间
-
-### 同步Fork后的代码
-
-#### 手动同步
-
-手动执行一次`同步源仓库`即可
-#### 自动同步
-开启并启用`同步源仓库`即可 每天会定时同步两次
-# 致谢
-
-[@chavyleung](https://github.com/chavyleung/)  
-[@Wenmoux](https://github.com/Wenmoux/)  
-[@NobyDa](https://github.com/NobyDa/)
-
-# 支持一下
-
-  ![支持一下](https://cdn.jsdelivr.net/gh/BlueskyClouds/Script@master/img/2021/05/25/img/wx.png)
-### 访问量
-
-![](http://profile-counter.glitch.me/MayoBlueSky/count.svg)
+##### GLaDOS-CheckIn推送通知环境变量(`微信Server酱`、`PushPlus(推送加)`、`Qmsg`)
+|       Name        |                                        归属                                        | 属性  | 说明 |
+|:-----------------:|:--------------------------------------------------------------------------------:|-----|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SENDKEY` | [微信Server酱](https://sct.ftqq.com/) | 非必须 | 去你创建的那个`.yml`文件里面修改`is_ServerChan_push`的值为`1` |
+| `TOKEN` | [PushPlus](https://www.pushplus.plus/) | 非必须 | 去你创建的那个`.yml`文件里面修改`is_PushPlus_push`的值为`1` |
+| `Key` | [Qmsg](https://qmsg.zendee.cn/) | 非必须 | 去你创建的那个`.yml`文件里面修改`is_Qmsg_push`的值为`1` |
+----
+#### 参考项目：
+- @feixuei: [feixuei/GLaDOS-CheckIn](https://github.com/feixuei/GLaDOS-CheckIn)
+- @MayoBlueSky: [MayoBlueSky/My-Actions](https://github.com/MayoBlueSky/My-Actions/tree/master)

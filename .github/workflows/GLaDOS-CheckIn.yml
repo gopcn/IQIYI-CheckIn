@@ -46,7 +46,7 @@ jobs:
           cat run.log >> new_run.log
           mv new_run.log run.log
       - name: Push log
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: GLaDOS签到
           branch: main
